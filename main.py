@@ -1,18 +1,33 @@
-import numpy as np
+import pandas as pd
+
+
+N_MA = 20
 
 
 def read():
-    rs = np.array([])
-    with open("stock_market_data-AAPL.csv") as f:
-        for i, line in enumerate(f):
-            if i == 0:
-                continue
-            x, date, low, high, close, ope = line.split(",")
-            np.vstack((rs, [date, low, high, close, ope]))
-    return rs
+    return pd.read_csv("stock_market_data-AAPL.csv")
+
+
+def form_X_and_Y(rs):
+    sample_rs = rs.head(100)
+    close = sample_rs['Close']
+    X, Y = [], []
+    for i in range(len(sample_rs) - N_MA - 1):
+        x = rs.iloc[i:i + N_MA + 1]
+        y = rs.iloc[i + N_MA + 1]
+        X.append(x)
+        Y.append(y)
+    return X, Y
 
 
 if __name__ == "__main__":
     rs = read()
     print("stock_market_data-AAPL.csv read")
-    print(rs[:10])
+    print(rs.head())
+
+    X, Y = form_X_and_Y(rs)
+    print("X formed")
+    print(X)
+    print("Y formed")
+    print(Y)
+

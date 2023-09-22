@@ -20,6 +20,14 @@ def form_X_and_Y(rs):
     return X, Y
 
 
+def calculate_Y_prime(X):
+    Y_prime = []
+    for x in X:
+        y_prime = x.mean()
+        Y_prime.append(y_prime)
+    return Y_prime
+
+
 if __name__ == "__main__":
     rs = read()
     print("stock_market_data-AAPL.csv read")
@@ -30,4 +38,8 @@ if __name__ == "__main__":
     print(X)
     print("Y formed")
     print(Y)
+
+    Y_prime = calculate_Y_prime(X)
+    print("Y_prime:")
+    print(Y_prime)
 

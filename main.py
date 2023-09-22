@@ -28,6 +28,14 @@ def calculate_Y_prime(X):
     return Y_prime
 
 
+def calculate_RMSE(Y_prime, Y):
+    sum_sq_error = 0
+    for i in range(len(Y_prime)):
+        sum_sq_error += (Y[i] - Y_prime[i])**2
+    mse = sum_sq_error / len(Y_prime)
+    return mse**(1/2)
+
+
 if __name__ == "__main__":
     rs = read()
     print("stock_market_data-AAPL.csv read")
@@ -42,4 +50,8 @@ if __name__ == "__main__":
     Y_prime = calculate_Y_prime(X)
     print("Y_prime:")
     print(Y_prime)
+
+    RMSE = calculate_RMSE(Y_prime, Y)
+    print("RMSE:")
+    print(RMSE)
 

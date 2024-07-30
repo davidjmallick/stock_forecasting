@@ -1,20 +1,22 @@
 import pandas as pd
 
 
-N_MA = 20
-
 
 def read():
     return pd.read_csv("stock_market_data-AAPL.csv")
 
 
-def form_X_and_Y(rs):
+"""
+@return X: List
+@return Y: List
+"""
+def form_Xs_and_Ys(rs, n_ma):
     sample_rs = rs.head(100)
     close = sample_rs['Close']
     X, Y = [], []
-    for i in range(len(close) - N_MA - 1):
-        x = close.iloc[i:i + N_MA + 1]
-        y = close.iloc[i + N_MA + 1]
+    for i in range(len(close) - n_ma - 1):
+        x = close.iloc[i:i + n_ma + 1]
+        y = close.iloc[i + n_ma + 1]
         X.append(x)
         Y.append(y)
     return X, Y
@@ -41,17 +43,27 @@ if __name__ == "__main__":
     print("stock_market_data-AAPL.csv read")
     print(rs.head())
 
-    X, Y = form_X_and_Y(rs)
+    n_mas = [10, 20, 30]
+    XYs = {}
+    for n_ma in n_mas:
+        X, Y = form_Xs_and_Ys(rs, n_ma)
+        XYs[n_ma] = (X, Y)
     print("X formed")
     print(X)
     print("Y formed")
     print(Y)
 
-    Y_prime = calculate_Y_prime(X)
-    print("Y_prime:")
-    print(Y_prime)
+    XYs_1 = {}
+    for n_ma in XYs.keys():
+        Y_prime = calculate_Y_prime(XYs[n_ma][0])
+        XYs_1[n_ma] = (XYs[n_ma][0], XYs[n_ma][1], Y_prime)
+        print("Y_prime:")
+        print(Y_prime)
 
-    RMSE = calculate_RMSE(Y_prime, Y)
-    print("RMSE:")
-    print(RMSE)
+    for k, v in XYs_1.items():
+        Y_prime = v[2]
+        Y = v[1]
+        RMSE = calculate_RMSE(Y_prime, Y)
+        print("RMSE:")
+        print(RMSE)
 
